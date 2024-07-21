@@ -7,13 +7,13 @@ export const signup = async (req, res) => {
 		const { fullName, username, password, confirmPassword, gender } = req.body;
 
 		if (password !== confirmPassword) {
-			return res.status(400).json({ error: "Passwords don't match" });
+			return res.status(400).json({ error: "Las contraseñas no coinciden" });
 		}
 
 		const user = await User.findOne({ username });
 
 		if (user) {
-			return res.status(400).json({ error: "Username already exists" });
+			return res.status(400).json({ error: "El usuario ya existe" });
 		}
 
 		// HASH PASSWORD HERE
@@ -45,7 +45,7 @@ export const signup = async (req, res) => {
 				profilePic: newUser.profilePic,
 			});
 		} else {
-			res.status(400).json({ error: "Invalid user data" });
+			res.status(400).json({ error: "Datos incorrectos" });
 		}
 	} catch (error) {
 		console.log("Error in signup controller", error.message);
@@ -60,7 +60,7 @@ export const login = async (req, res) => {
 		const isPasswordCorrect = await bcrypt.compare(password, user?.password || "");
 
 		if (!user || !isPasswordCorrect) {
-			return res.status(400).json({ error: "Invalid username or password" });
+			return res.status(400).json({ error: "Usuario o contraseña incorrecta" });
 		}
 
 		generateTokenAndSetCookie(user._id, res);
